@@ -1,0 +1,12 @@
+---
+# - include: "{{ ansible_os_family }}.yml"
+# - include: "Debian.yml"
+# https://groups.google.com/forum/#!topic/ansible-project/PzA4Vb9SEmk
+
+- name: create eye config dir
+  file: state=directory path=/etc/eye owner=root group=root mode=0755
+
+- name: put apps.rb eye config file
+  template: src=apps.rb dest=/etc/eye/apps.eye owner=root group=root mode=0644
+
+- include: eye.yml

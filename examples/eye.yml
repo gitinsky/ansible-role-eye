@@ -1,0 +1,6 @@
+- hosts: eye-hosts
+  sudo: yes
+  roles:
+    - role: eye
+      # tags:
+      #   - eye

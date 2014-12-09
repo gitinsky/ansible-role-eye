@@ -1,0 +1,48 @@
+---
+- name: install curl
+  apt: name=curl state=present
+  
+# Add an apt key by id from a keyserver
+- name: Import GPG keys
+  command: 'gpg --keyserver hkp://keys.gnupg.net --recv-keys D39DC0E3'
+  changed_when: False
+
+- name: install RVM
+  command: bash -c "curl -L https://get.rvm.io | bash -s stable"
+  sudo: yes
+
+- name: install Ruby
+  command: bash -c "source /usr/local/rvm/scripts/rvm && rvm install ruby"
+  sudo: yes
+
+- name: add source rvm for all users
+  copy: src=rvm-env.sh
+        dest=/etc/profile.d/rvm-env.sh
+        owner=root
+        group=root
+        mode=0644
+
+- name: set a default Ruby
+  command: bash -c "source /usr/local/rvm/scripts/rvm && rvm use ruby --default"
+  sudo: yes
+
+- name: install eye
+  command: bash -c "source /usr/local/rvm/scripts/rvm && gem install eye"
+  sudo: yes
+
+# - name: install eye
+#   command: bash -c "source /usr/local/rvm/scripts/rvm && gem install eye"
+#   sudo: no
+
+- name: create eye config dir
+  file: state=directory path=/etc/eye owner=root group=root mode=0755
+
+- name: create eye log dir
+  file: state=directory path=/var/log/eye owner=root group=root mode=0755
+
+- name: put eye definition to upstart configs
+  template: src=eye.conf dest=/etc/init/eye.conf owner=root group=root mode=0644
+
+- name: load config in eye
+  command: bash -c "source /usr/local/rvm/scripts/rvm && eye l /etc/eye/apps.eye"
+  sudo: yes
