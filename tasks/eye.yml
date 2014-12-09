@@ -7,9 +7,16 @@
   command: 'gpg --keyserver hkp://keys.gnupg.net --recv-keys D39DC0E3'
   changed_when: False
 
+- name: check if RVM is installed
+  command: bash -c "source /usr/local/rvm/scripts/rvm && rvm"
+  ignore_errors: true
+  register: result
+  sudo: yes
+
 - name: install RVM
   command: bash -c "curl -L https://get.rvm.io | bash -s stable"
   sudo: yes
+  when: result|failed
 
 - name: install Ruby
   command: bash -c "source /usr/local/rvm/scripts/rvm && rvm install ruby"
@@ -26,9 +33,15 @@
   command: bash -c "source /usr/local/rvm/scripts/rvm && rvm use ruby --default"
   sudo: yes
 
+- name: check if eye is installed
+  command: bash -c "source /usr/local/rvm/scripts/rvm && eye i"
+  register: result
+  ignore_errors: yes
+
 - name: install eye
   command: bash -c "source /usr/local/rvm/scripts/rvm && gem install eye"
   sudo: yes
+  when: result|failed
 
 # - name: install eye
 #   command: bash -c "source /usr/local/rvm/scripts/rvm && gem install eye"
