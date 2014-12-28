@@ -66,6 +66,7 @@
 
 - name: put eye definition to upstart configs
   template: src=eye.conf dest=/etc/init/eye.conf owner=root group=root mode=0644
+  when: ansible_distribution == "Ubuntu"
 
 - name: load config in eye
   command: bash -c "source /usr/local/rvm/scripts/rvm && eye l /etc/eye/apps.eye"
