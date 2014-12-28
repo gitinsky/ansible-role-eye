@@ -7,10 +7,16 @@
 - include: Ubuntu.yml
   when: ansible_distribution == "Ubuntu"
 
+- name: check if GPG key is present
+  command: bash -c "gpg -k | grep D39DC0E3"
+  ignore_errors: true
+  register: result
+
 # Add an apt key by id from a keyserver
 - name: Import GPG keys
   command: 'gpg --keyserver hkp://keys.gnupg.net --recv-keys D39DC0E3'
   changed_when: False
+  when: result|failed
 
 - name: check if RVM is installed
   command: bash -c "source /usr/local/rvm/scripts/rvm && rvm"
