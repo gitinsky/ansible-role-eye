@@ -1,3 +1,9 @@
 ---
 - name: install curl
   yum: name=curl state=present
+
+- name: install gnupg
+  yum: name=gnupg state=present
+
+- name: install tar
+  yum: name=tar state=present
