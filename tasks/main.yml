@@ -1,12 +1,37 @@
 ---
-# - include: "{{ ansible_os_family }}.yml"
-# - include: "Debian.yml"
-# https://groups.google.com/forum/#!topic/ansible-project/PzA4Vb9SEmk
+- name: ensure eye_user is presented
+  user: name={{ eye_user }} shell=/bin/bash
+  tags: eye
+
+- name: get user's home
+  command: bash -c 'eval echo "~{{ eye_user }}"'
+  when: eye_user != 'root'
+  changed_when: false
+  register: eye_user_home
+  tags: eye
+#"
+
+- name: define eye home
+  set_fact:
+    eye_home: /etc/eye
+  when: eye_user == 'root'
+  tags: eye
+
+- name: define eye home
+  set_fact:
+    eye_home: "{{ eye_user_home.stdout }}/eye"
+  when: eye_user != 'root'
+  tags: eye
 
 - name: create eye config dir
-  file: state=directory path=/etc/eye owner=root group=root mode=0755
+  file: state=directory path={{ eye_home }} owner={{ eye_user }} group={{ eye_user }} mode=0755
+  tags: eye
 
 - name: put apps.rb eye config file
-  template: src=apps.rb dest=/etc/eye/apps.eye owner=root group=root mode=0644
+  template: src=apps.rb dest={{ eye_home }}/apps.eye owner={{ eye_user }} group={{ eye_user }} mode=0644
+  tags: eye
 
 - include: eye.yml
+
+- include: remove.yml
+  when: eye_remove
