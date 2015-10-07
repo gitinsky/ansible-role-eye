@@ -15,13 +15,13 @@
   set_fact:
     eye_home: /etc/eye
   when: eye_user == 'root'
-  tags: eye
+  tags: always
 
 - name: define eye home
   set_fact:
     eye_home: "{{ eye_user_home.stdout }}/eye"
   when: eye_user != 'root'
-  tags: eye
+  tags: always
 
 - name: create eye config dir
   file: state=directory path={{ eye_home }} owner={{ eye_user }} group={{ eye_user }} mode=0755
