@@ -1,22 +1,17 @@
 - name: remove eye config dir
   file: state=absent path={{ eye_home }}
-  tags: eye
 
 - name: remove eye definition to upstart configs
   file: state=absent path=/etc/init/eye{{ '-' + eye_user if eye_user != 'root' else '' }}.conf
   when: ansible_distribution == "Ubuntu"
-  tags: eye
 
 - name: remove eye log dir
   file: state=absent path=/var/log/eye{{ '-' + eye_user if eye_user != 'root' else '' }}
-  tags: eye
 
 - name: remove depricated eye log for root
   file: state=absent path=/var/log/eye.log 
-  tags: eye
   
 - name: quit eye
   command: bash -c "source /usr/local/rvm/scripts/rvm && eye q"
   sudo: yes
   sudo_user: "{{ eye_user }}"
-  tags: eye

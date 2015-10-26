@@ -12,25 +12,23 @@
   register: result
   changed_when: result.rc > 0
   failed_when: no
-  tags: eye
 
 - name: install eye
   command: bash -c "source /usr/local/rvm/scripts/rvm && gem install eye"
   sudo: yes
   when: result.rc > 0
-  tags: eye
 
 - name: create eye log dir
   file: state=directory path=/var/log/eye{{ '-' + eye_user if eye_user != 'root' else '' }} owner={{ eye_user }} group={{ eye_user }} mode=0777
-  tags: eye
 
 - name: put eye definition to upstart configs
   template: src=eye.conf dest=/etc/init/eye{{ '-' + eye_user if eye_user != 'root' else '' }}.conf owner=root group=root mode=0644
   when: ansible_distribution == "Ubuntu"
-  tags: eye
 
 - name: load config in eye
   command: bash -c "source /usr/local/rvm/scripts/rvm && eye l {{ eye_home }}/apps.eye"
   sudo: yes
   sudo_user: "{{ eye_user }}"
-  tags: eye
+
+- name: put eye bin
+  template: src=eye dest=/usr/local/bin/eye mode=755
