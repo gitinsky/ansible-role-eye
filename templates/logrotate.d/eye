@@ -1,0 +1,12 @@
+# eye logrotate configuration file, {{ ansible_managed }}
+
+/var/log/eye{{ '-' + eye_user if eye_user != 'root' else '' }}/*.log {
+    rotate 31
+    daily
+    compress
+    missingok
+    size 100M
+    rotate 4
+    copytruncate
+    su {{ eye_user }} {{ eye_user }}
+}
