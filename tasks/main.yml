@@ -7,7 +7,7 @@
   when: eye_user != 'root'
   changed_when: false
   register: eye_user_home
-#"
+  tags: always
 
 - name: define eye home
   set_fact:
