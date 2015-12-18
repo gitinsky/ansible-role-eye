@@ -22,11 +22,11 @@
   file: state=directory path=/var/log/eye{{ '-' + eye_user if eye_user != 'root' else '' }} owner={{ eye_user }} group={{ eye_user }} mode=0777
 
 - name: setup logrotate for eye
-  template: src=logrotate.d/eye{{ '-' + eye_user if eye_user != 'root' else '' }} dest=/etc/logrotate.d/eye
+  template: src=logrotate.d/eye dest=/etc/logrotate.d/eye{{ '-' + eye_user if eye_user != 'root' else '' }}
   register: result
 
 - name: logrotate
-  shell: logrotate /etc/logrotate.d/eye
+  shell: logrotate /etc/logrotate.d/eye{{ '-' + eye_user if eye_user != 'root' else '' }}
   when: result.changed
 
 - name: put eye definition to upstart configs
