@@ -1,3 +1,6 @@
 ---
 - name: install curl
   apt: name=curl state=present
+
+- name: install gmp
+  apt: name=libgmp-dev state=present
