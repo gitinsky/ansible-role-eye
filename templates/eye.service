@@ -1,0 +1,16 @@
+[Unit]
+Description=Eye Service
+Documentation=https://github.com/kostya/eye
+
+[Service]
+Type=oneshot
+User=root
+Group=root
+ExecStart=/bin/bash -c "source /etc/profile.d/rvm.sh && eye load /etc/eye/apps.eye"
+RemainAfterExit=True
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=multi-user.target
+Alias=eye.service
