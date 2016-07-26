@@ -29,17 +29,24 @@
   shell: logrotate /etc/logrotate.d/eye{{ '-' + eye_user if eye_user != 'root' else '' }}
   when: result.changed
 
+- name: Fix gem sigar
+  shell: bash -c 'source /etc/profile.d/rvm.sh; gem install sigar -- --with-cppflags="-fgnu89-inline"'
+  when: "(ansible_distribution == 'Debian' and ansible_distribution_major_version == '8') or \
+         (ansible_distribution == 'Ubuntu' and ansible_distribution_major_version == '16')"
+
 - name: put eye definition to upstart configs
   template: src=eye.conf dest=/etc/init/eye{{ '-' + eye_user if eye_user != 'root' else '' }}.conf owner=root group=root mode=0644
   when: ansible_distribution == "Ubuntu"
 
 - name: put systemd unit file to its destination
   template: src=eye.service dest=/etc/systemd/system/eye{{ '-' + eye_user if eye_user != 'root' else '' }}.service owner=root group=root mode=0644
-  when: "ansible_distribution == 'Debian' and ansible_distribution_major_version == '8'"
+  when: "(ansible_distribution == 'Debian' and ansible_distribution_major_version == '8') or \
+         (ansible_distribution == 'Ubuntu' and ansible_distribution_major_version == '16')"
 
 - name: enable eye service
-  service: name=eye enabled=yes state=started
-  when: "ansible_distribution == 'Debian' and ansible_distribution_major_version == '8'"
+  service: name=eye{{ '-' + eye_user if eye_user != 'root' else '' }} enabled=yes state=started
+  when: "(ansible_distribution == 'Debian' and ansible_distribution_major_version == '8') or \
+         (ansible_distribution == 'Ubuntu' and ansible_distribution_major_version == '16')"
 
 - name: load config in eye
   command: bash -c "source /usr/local/rvm/scripts/rvm && eye l {{ eye_home }}/apps.eye"
