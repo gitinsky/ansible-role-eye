@@ -1,5 +1,5 @@
 - hosts: eye-hosts
-  sudo: yes
+  become: yes
   roles:
     - role: eye
       # tags:
