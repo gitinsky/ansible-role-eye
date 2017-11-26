@@ -27,7 +27,7 @@
 - name: put apps.rb eye config file
   template: src=apps.rb dest={{ eye_home }}/apps.eye owner={{ eye_user }} group={{ eye_user }} mode=0644
 
-- include: eye.yml
+- include_tasks: eye.yml
 
-- include: remove.yml
+- include_tasks: remove.yml
   when: eye_remove

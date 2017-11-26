@@ -1,10 +1,10 @@
 ---
 # CentOS specific package installations
-- include: RedHat.yml
+- include_tasks: RedHat.yml
   when: ansible_os_family  == "RedHat"
 
 # Ubuntu specific package installations
-- include: Ubuntu.yml
+- include_tasks: Ubuntu.yml
   when: ansible_distribution == "Ubuntu"
 
 - name: check if eye is installed
@@ -15,7 +15,7 @@
 
 - name: install eye
   command: bash -c "source /usr/local/rvm/scripts/rvm && gem install eye"
-  sudo: yes
+  become: yes
   when: result.rc > 0
 
 - name: create eye log dir
@@ -43,8 +43,8 @@
 
 - name: load config in eye
   command: bash -c "source /usr/local/rvm/scripts/rvm && eye l {{ eye_home }}/apps.eye"
-  sudo: yes
-  sudo_user: "{{ eye_user }}"
+  become: yes
+  become_user: "{{ eye_user }}"
 
 - name: put eye bin
   template: src=eye dest=/usr/local/bin/eye mode=755
