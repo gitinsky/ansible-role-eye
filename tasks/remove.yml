@@ -13,5 +13,5 @@
   
 - name: quit eye
   command: bash -c "source /usr/local/rvm/scripts/rvm && eye q"
-  sudo: yes
-  sudo_user: "{{ eye_user }}"
+  become: yes
+  become_user: "{{ eye_user }}"

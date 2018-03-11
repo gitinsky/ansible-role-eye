@@ -13,4 +13,3 @@ StandardError=journal
 
 [Install]
 WantedBy=multi-user.target
-Alias=eye.service
