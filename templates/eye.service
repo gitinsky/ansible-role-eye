@@ -4,9 +4,9 @@ Documentation=https://github.com/kostya/eye
 
 [Service]
 Type=oneshot
-User=root
-Group=root
-ExecStart=/bin/bash -c "source /etc/profile.d/rvm.sh && eye load /etc/eye/apps.eye"
+User={{ eye_user }}
+Group={{ eye_user }}
+ExecStart=/bin/bash -c "source /etc/profile.d/rvm.sh && eye load {{ eye_home }}/apps.eye"
 RemainAfterExit=True
 StandardOutput=journal
 StandardError=journal
