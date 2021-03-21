@@ -1,3 +1,4 @@
 ---
 eye_user: root
 eye_remove: false
+eye_use_rvm: false
